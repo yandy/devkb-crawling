@@ -26,6 +26,9 @@ class StackoverflowSpider(scrapy.Spider):
             yield self._parse_user(response, id=matched.group('user_id'))
         elif matched.group('tag_name'):
             yield self._parse_tag(response, id=matched.group('tag_name'))
+        elif matched.group('question_id'):
+            for item in self._parse_question(response, id=matched.group('question_id')):
+                yield item
 
     def _parse_user(self, response, id):
         item = UserItem()
@@ -35,14 +38,35 @@ class StackoverflowSpider(scrapy.Spider):
             '//*[@id="user-displayname"]//a/text()').extract().pop()
         item['reputation'] = parse_int(
             response.xpath('//*[@id="user-panel-reputation"]//h1//span/text()').extract().pop())
-        item['tags'] = response.xpath(
-            '//*[@id="user-panel-tags"]//table/tbody//td//a/text()').extract()
         return item
 
     def _parse_tag(self, response, id):
         item = TagItem()
         item['name'] = id
         item['url'] = response.url
-        item['qcount'] = response.xpath('//*[contains(@class,"summarycount")]/text()').extract().pop()
-        item['descr'] = ''.join(response.xpath('//*[@id="questions"]//*[contains(@class,"post-text")]/node()').extract())
+        item['qcount'] = parse_int(
+            response.xpath('//*[contains(@class,"summarycount")]/text()').extract().pop())
+        descr = ''.join(response.xpath(
+            '//*[@id="questions"]//*[contains(@class,"post-text")]/node()').extract())
+        item['descr'] = descr.strip()
         return item
+
+    def _parse_question(self, response, id):
+        item = QuestionItem()
+        item['id'] = int(id)
+        item['url'] = response.url
+        item['title'] = response.xpath(
+            '//div[@id="question-header"]//h1//a/text()').extract().pop()
+        body = ''.join(response.xpath(
+            '//div[@id="question"]//td[contains(@class,"postcell")]//div[contains(@class,"post-text")]/node()').extract())
+        item['body'] = body.strip()
+        item['tags'] = response.xpath(
+            '//div[@id="question"]//td[contains(@class,"postcell")]//div[contains(@class,"post-taglist")]//a/text()').extract()
+        item['vote'] = parse_int(response.xpath(
+            '//div[@id="question"]//div[contains(@class,"vote")]//span[contains(@class,"vote-count-post ")]/text()').extract().pop())
+        item['comments'] = response.xpath('//div[@id="question"]//tr[contains(@class,"comment")]//span[contains(@class,"comment-copy")]/text()').extract()
+        user_url = response.xpath(
+            '//div[@id="question"]//td[contains(@class,"postcell")]//div[contains(@class,"user-gravatar32")]/a/@href').extract().pop()
+        matched = re.match(r'/users/(?P<user_id>\d+)/[\w.-]+', user_url)
+        item['user_id'] = int(matched.group('user_id'))
+        yield item

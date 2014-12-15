@@ -43,6 +43,7 @@ class Question(DeclarativeBase):
     body = Column(Text)
     tags = Column(PickleType)  # String List
     vote = Column(Integer)
+    comments = Column(PickleType)  # String List
     user_id = Column(Integer, ForeignKey('stackoverflow_users.id'))
     answers = relationship('Answer', backref='user')
 

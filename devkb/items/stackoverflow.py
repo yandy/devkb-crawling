@@ -14,7 +14,6 @@ class UserItem(scrapy.Item):
     url = scrapy.Field()
     name = scrapy.Field()
     reputation = scrapy.Field()
-    tags = scrapy.Field()
 
 
 class TagItem(scrapy.Item):
@@ -33,7 +32,8 @@ class QuestionItem(scrapy.Item):
     body = scrapy.Field()
     tags = scrapy.Field()
     vote = scrapy.Field()
-    user = scrapy.Field()
+    comments = scrapy.Field()
+    user_id = scrapy.Field()
 
 
 class AnswerItem(scrapy.Item):
@@ -44,4 +44,5 @@ class AnswerItem(scrapy.Item):
     vote = scrapy.Field()
     accept = scrapy.Field()
     comments = scrapy.Field()
-    user = scrapy.Field()
+    user_id = scrapy.Field()
+    question_id = scrapy.Field()

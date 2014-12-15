@@ -23,9 +23,8 @@ DATABASE = {
 
 URL_REGEXS = {
     'stackoverflow': {
-        'user': r'^http://stackoverflow\.com/users/(?P<user_id>\d+)/',
-        'tag': r'^http://stackoverflow\.com/tags/(?P<tag_name>[\w.-]+)/info',
-        'question': r'^http://stackoverflow\.com/questions/(?P<question_id>\d+)/',
-        'answer': r'^http://stackoverflow\.com/a/(?P<answer_id>\d+)'
+        'user': r'^http://stackoverflow\.com/users/(?P<user_id>\d+)/[\w.-]+/?$',
+        'tag': r'^http://stackoverflow\.com/tags/(?P<tag_name>[\w.-]+)/info/?$',
+        'question': r'^http://stackoverflow\.com/questions/(?P<question_id>\d+)/[\w.-]+/?$'
     }
 }
