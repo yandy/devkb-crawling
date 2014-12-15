@@ -20,3 +20,5 @@ DATABASE = {
   'drivername': 'sqlite',
   'database': 'devkb'
 }
+
+URL_REGEXS = {}

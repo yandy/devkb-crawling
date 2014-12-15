@@ -3,6 +3,7 @@ from scrapy.command import ScrapyCommand
 
 from devkb.models import DeclarativeBase, ENGINE
 
+
 class DBSetup(ScrapyCommand):
 
     def syntax(self):
@@ -14,7 +15,7 @@ class DBSetup(ScrapyCommand):
     def add_options(self, parser):
         ScrapyCommand.add_options(self, parser)
         parser.add_option("--verbose", "-v", dest="verbose", action="store_true",
-            help="show setup processing")
+                          help="show setup processing")
 
     def run(self, args, opts):
         rest = DeclarativeBase.metadata.create_all(ENGINE)

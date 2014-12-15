@@ -17,11 +17,13 @@ class UserItem(scrapy.Item):
     answers = scrapy.Field()
     tags = scrapy.Field()
 
+
 class TagItem(scrapy.Item):
     # define the fields for your item here like:
     name = scrapy.Field()
     qcount = scrapy.Field()
     descr = scrapy.Field()
+
 
 class QuestionItem(scrapy.Item):
     # define the fields for your item here like:
@@ -32,6 +34,7 @@ class QuestionItem(scrapy.Item):
     vote = scrapy.Field()
     user = scrapy.Field()
     answers = scrapy.Field()
+
 
 class AnswerItem(scrapy.Item):
     # define the fields for your item here like:
