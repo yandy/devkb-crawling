@@ -5,7 +5,8 @@
 # See documentation in:
 # http://doc.scrapy.org/en/latest/topics/items.html
 
-from sqlalchemy import Column, Integer, String, Table, ForeignKey
+from sqlalchemy import Integer, String, Text, PickleType
+from sqlalchemy import Table, Column, ForeignKey
 from sqlalchemy.orm import relationship, backref
 
 from devkb.models import DeclarativeBase
@@ -15,29 +16,32 @@ class User(DeclarativeBase):
     __tablename__ = "stackoverflow_users"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String)
+    url = Column(String(200))
+    name = Column(String(40))
     reputation = Column(Integer)
     questions = relationship('Question', backref='user')
     answers = relationship('Answer', backref='user')
-    tags = Column(String)  # String List
+    tags = Column(PickleType)  # String List
 
 
 class Tag(DeclarativeBase):
     __tablename__ = "stackoverflow_tags"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String)
+    url = Column(String(200))
+    name = Column(String(40))
     qcount = Column(Integer)
-    descr = Column(String)
+    descr = Column(Text)
 
 
 class Question(DeclarativeBase):
     __tablename__ = 'stackoverflow_questions'
 
     id = Column(Integer, primary_key=True)
-    title = Column(String)
-    body = Column(String)
-    tags = Column(String)  # String List
+    url = Column(String(200))
+    title = Column(String(100))
+    body = Column(Text)
+    tags = Column(PickleType)  # String List
     vote = Column(Integer)
     user_id = Column(Integer, ForeignKey('stackoverflow_users.id'))
     answers = relationship('Answer', backref='user')
@@ -47,10 +51,10 @@ class Answer(DeclarativeBase):
     __tablename__ = "stackoverflow_answers"
 
     id = Column(Integer, primary_key=True)
-    ansid = Column(Integer)
-    body = Column(String)
+    url = Column(String(200))
+    body = Column(Text)
     vote = Column(Integer)
     accept = Column(Boolean)
-    comments = Column(String)  # String List
+    comments = Column(PickleType)  # String List
     user_id = Column(Integer, ForeignKey('stackoverflow_users.id'))
     question_id = Column(Integer, ForeignKey('stackoverflow_questions.id'))
