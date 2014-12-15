@@ -15,3 +15,8 @@ NEWSPIDER_MODULE = 'devkb.spiders'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'devkb (+http://www.yourdomain.com)'
+
+DATABASE = {
+  'drivername': 'sqlite',
+  'database': 'devkb'
+}
