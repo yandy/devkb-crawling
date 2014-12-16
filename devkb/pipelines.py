@@ -18,9 +18,17 @@ class DevkbPipeline(object):
         elif isinstance(item, TagItem):
             model = Tag(**item)
         elif isinstance(item, QuestionItem):
+            user = User(id=item['user_id'])
+            session.merge(user)
             model = Question(**item)
         elif isinstance(item, AnswerItem):
+            user = User(id=item['user_id'])
+            session.merge(user)
+            question = Question(id=item['question_id'])
+            session.merge(question)
             model = Answer(**item)
+        else:
+            return item
         session.merge(model)
         session.commit()
         return item
