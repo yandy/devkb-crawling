@@ -22,7 +22,7 @@ COMMANDS_MODULE = 'devkb.commands'
 
 DATABASE = {
     'drivername': 'sqlite',
-    'database': 'devkb'
+    'database': 'devkb.sqlite3'
 }
 
 URL_REGEXS = {
