@@ -5,7 +5,7 @@
 # See documentation in:
 # http://doc.scrapy.org/en/latest/topics/items.html
 
-from sqlalchemy import Integer, String, Text, PickleType
+from sqlalchemy import Integer, String, Text, PickleType, Boolean
 from sqlalchemy import Table, Column, ForeignKey
 from sqlalchemy.orm import relationship, backref
 

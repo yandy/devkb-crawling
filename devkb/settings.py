@@ -13,6 +13,8 @@ BOT_NAME = 'devkb'
 SPIDER_MODULES = ['devkb.spiders']
 NEWSPIDER_MODULE = 'devkb.spiders'
 
+ITEM_PIPELINES = { 'devkb.pipelines.DevkbPipeline': 1 }
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'devkb (+http://www.yourdomain.com)'
 
