@@ -1,5 +1,4 @@
 import scrapy
-import cPickle
 import re
 
 from devkb.items.stackoverflow import UserItem, TagItem, QuestionItem, AnswerItem
@@ -34,10 +33,10 @@ class StackoverflowSpider(scrapy.Spider):
         item = UserItem()
         item['id'] = int(id)
         item['url'] = response.url
-        item['name'] = response.xpath(
-            '//*[@id="user-displayname"]//a/text()').extract().pop()
+        item['name'] = response.css(
+            'h1#user-displayname a::text').extract().pop()
         item['reputation'] = parse_int(
-            response.xpath('//*[@id="user-panel-reputation"]//h1//span/text()').extract().pop())
+            response.css('div#user-info-container div.reputation a::text').extract().pop())
         return item
 
     def _parse_tag(self, response, id):
@@ -45,9 +44,9 @@ class StackoverflowSpider(scrapy.Spider):
         item['name'] = id
         item['url'] = response.url
         item['qcount'] = parse_int(
-            response.xpath('//*[contains(@class,"summarycount")]/text()').extract().pop())
-        descr = ''.join(response.xpath(
-            '//*[@id="questions"]//*[contains(@class,"post-text")]/node()').extract())
+            response.css('.summarycount::text').extract().pop())
+        descr = ''.join(response.css(
+            '#questions .post-text').xpath('node()').extract())
         item['descr'] = descr.strip()
         return item
 
@@ -55,18 +54,34 @@ class StackoverflowSpider(scrapy.Spider):
         item = QuestionItem()
         item['id'] = int(id)
         item['url'] = response.url
-        item['title'] = response.xpath(
-            '//div[@id="question-header"]//h1//a/text()').extract().pop()
-        body = ''.join(response.xpath(
-            '//div[@id="question"]//td[contains(@class,"postcell")]//div[contains(@class,"post-text")]/node()').extract())
+        item['title'] = response.css(
+            'div#question-header h1[itemprop=name] a::text').extract().pop()
+        body = ''.join(response.css(
+            'div#question td.postcell div[itemprop=text]').xpath('node()').extract())
         item['body'] = body.strip()
-        item['tags'] = response.xpath(
-            '//div[@id="question"]//td[contains(@class,"postcell")]//div[contains(@class,"post-taglist")]//a/text()').extract()
-        item['vote'] = parse_int(response.xpath(
-            '//div[@id="question"]//div[contains(@class,"vote")]//span[contains(@class,"vote-count-post ")]/text()').extract().pop())
-        item['comments'] = response.xpath('//div[@id="question"]//tr[contains(@class,"comment")]//span[contains(@class,"comment-copy")]/text()').extract()
-        user_url = response.xpath(
-            '//div[@id="question"]//td[contains(@class,"postcell")]//div[contains(@class,"user-gravatar32")]/a/@href').extract().pop()
+        item['tags'] = response.css(
+            'div#question td.postcell div.post-taglist a[rel=tag]::text').extract()
+        item['vote'] = parse_int(response.css(
+            'div#question div.vote span[itemprop=upvoteCount]::text').extract().pop())
+        item['comments'] = response.css(
+            'div#question tr.comment span.comment-copy::text').extract()
+        user_url = response.css(
+            'div#question div.user-info div.user-gravatar32 a::attr(href)').extract().pop()
         matched = re.match(r'/users/(?P<user_id>\d+)/[\w.-]+', user_url)
         item['user_id'] = int(matched.group('user_id'))
         yield item
+        for answer in response.css('div#answers div.answer'):
+            item = AnswerItem()
+            item['id'] = int(
+                answer.xpath('@data-answerid').extract().pop())
+            item['url'] = response.url.rstrip('/') + '/%d#%d' % (item['id'], item['id'])
+            body = ''.join(answer.css('div[itemprop=text]').xpath('node()').extract())
+            item['body'] = body.strip()
+            item['vote'] = parse_int(answer.css('div.vote span[itemprop=upvoteCount]::text').extract().pop())
+            item['accept'] = bool(answer.css('div.vote span.vote-accepted-on'))
+            item['comments'] = answer.css('tr.comment span.comment-copy::text').extract()
+            user_url = answer.css('div.user-info div.user-gravatar32 a::attr(href)').extract().pop()
+            matched = re.match(r'/users/(?P<user_id>\d+)/[\w.-]+', user_url)
+            item['user_id'] = int(matched.group('user_id'))
+            item['question_id'] = int(id)
+            yield item
