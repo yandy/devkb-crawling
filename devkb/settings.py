@@ -21,8 +21,12 @@ ITEM_PIPELINES = { 'devkb.pipelines.DevkbPipeline': 1 }
 COMMANDS_MODULE = 'devkb.commands'
 
 DATABASE = {
-    'drivername': 'sqlite',
-    'database': 'devkb.sqlite3'
+    'drivername': 'mysql+pymysql',
+    'username': 'devkb',
+    'password': 'game584131',
+    'host': '0.0.0.0',
+    'port': 3306,
+    'database': 'devkb'
 }
 
 URL_REGEXS = {
