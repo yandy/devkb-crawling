@@ -74,13 +74,18 @@ class StackoverflowSpider(scrapy.Spider):
             item = AnswerItem()
             item['id'] = int(
                 answer.xpath('@data-answerid').extract().pop())
-            item['url'] = response.url.rstrip('/') + '/%d#%d' % (item['id'], item['id'])
-            body = ''.join(answer.css('div[itemprop=text]').xpath('node()').extract())
+            item['url'] = response.url.rstrip(
+                '/') + '/%d#%d' % (item['id'], item['id'])
+            body = ''.join(
+                answer.css('div[itemprop=text]').xpath('node()').extract())
             item['body'] = body.strip()
-            item['vote'] = parse_int(answer.css('div.vote span[itemprop=upvoteCount]::text').extract().pop())
+            item['vote'] = parse_int(
+                answer.css('div.vote span[itemprop=upvoteCount]::text').extract().pop())
             item['accept'] = bool(answer.css('div.vote span.vote-accepted-on'))
-            item['comments'] = answer.css('tr.comment span.comment-copy::text').extract()
-            user_url = answer.css('div.user-info div.user-gravatar32 a::attr(href)').extract().pop()
+            item['comments'] = answer.css(
+                'tr.comment span.comment-copy::text').extract()
+            user_url = answer.css(
+                'div.user-info div.user-gravatar32 a::attr(href)').extract().pop()
             matched = re.match(r'/users/(?P<user_id>\d+)/[\w.-]+', user_url)
             item['user_id'] = int(matched.group('user_id'))
             item['question_id'] = int(id)
