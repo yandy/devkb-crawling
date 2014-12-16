@@ -26,7 +26,11 @@ DATABASE = {
     'password': 'game584131',
     'host': '0.0.0.0',
     'port': 3306,
-    'database': 'devkb'
+    'database': 'devkb',
+    'query': {
+        'charset': 'utf8',
+        'use_unicode': 0
+    }
 }
 
 URL_REGEXS = {
