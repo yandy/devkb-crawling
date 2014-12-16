@@ -42,8 +42,8 @@ DATABASE = {
 
 URL_REGEXS = {
     'stackoverflow': {
-        'user': r'^http://stackoverflow\.com/users/(?P<user_id>\d+)/[\w.-]+/?$',
+        'user': r'^http://stackoverflow\.com/users/(?P<user_id>\d+)/[^/]+/?$',
         'tag': r'^http://stackoverflow\.com/tags/(?P<tag_name>[\w.-]+)/info/?$',
-        'question': r'^http://stackoverflow\.com/questions/(?P<question_id>\d+)/[\w.-]+/?$'
+        'question': r'^http://stackoverflow\.com/questions/(?P<question_id>\d+)/[^/]+/?$'
     }
 }

@@ -35,10 +35,10 @@ class StackoverflowSpider(scrapy.Spider):
         item = UserItem()
         item['id'] = int(id)
         item['url'] = response.url
-        item['name'] = response.css(
-            'h1#user-displayname a::text').extract().pop()
+        item['name'] = ''.join(
+            response.css('h1#user-displayname a::text').extract())
         item['reputation'] = parse_int(
-            response.css('div#user-info-container div.reputation a::text').extract().pop())
+            ''.join(response.css('div#user-info-container div.reputation a::text').extract()))
         return item
 
     def _parse_tag(self, response, id):
@@ -46,7 +46,7 @@ class StackoverflowSpider(scrapy.Spider):
         item['name'] = id
         item['url'] = response.url
         item['qcount'] = parse_int(
-            response.css('.summarycount::text').extract().pop())
+            ''.join(response.css('.summarycount::text').extract()))
         descr = ''.join(response.css(
             '#questions .post-text').xpath('node()').extract())
         item['descr'] = descr.strip()
@@ -56,39 +56,38 @@ class StackoverflowSpider(scrapy.Spider):
         item = QuestionItem()
         item['id'] = int(id)
         item['url'] = response.url
-        item['title'] = response.css(
-            'div#question-header h1[itemprop=name] a::text').extract().pop()
+        item['title'] = ''.join(
+            response.css('div#question-header h1[itemprop=name] a::text').extract())
         body = ''.join(response.css(
             'div#question td.postcell div[itemprop=text]').xpath('node()').extract())
         item['body'] = body.strip()
         item['tags'] = response.css(
             'div#question td.postcell div.post-taglist a[rel=tag]::text').extract()
-        item['vote'] = parse_int(response.css(
-            'div#question div.vote span[itemprop=upvoteCount]::text').extract().pop())
+        item['vote'] = parse_int(''.join(response.css(
+            'div#question div.vote span[itemprop=upvoteCount]::text').extract()))
         item['comments'] = response.css(
             'div#question tr.comment span.comment-copy::text').extract()
-        user_url = response.css(
-            'div#question div.user-info div.user-gravatar32 a::attr(href)').extract().pop()
-        matched = re.match(r'/users/(?P<user_id>\d+)/[\w.-]+', user_url)
-        item['user_id'] = int(matched.group('user_id'))
+        user_url = ''.join(response.css(
+            'div#question div.user-info div.user-gravatar32 a::attr(href)').extract())
+        matched = re.match(r'/users/(?P<user_id>\d+)/', user_url)
+        item['user_id'] = matched and int(matched.group('user_id'))
         yield item
         for answer in response.css('div#answers div.answer'):
             item = AnswerItem()
-            item['id'] = int(
-                answer.xpath('@data-answerid').extract().pop())
+            item['id'] = int(''.join(answer.xpath('@data-answerid').extract()))
             item['url'] = response.url.rstrip(
                 '/') + '/%d#%d' % (item['id'], item['id'])
             body = ''.join(
                 answer.css('div[itemprop=text]').xpath('node()').extract())
             item['body'] = body.strip()
             item['vote'] = parse_int(
-                answer.css('div.vote span[itemprop=upvoteCount]::text').extract().pop())
+                ''.join(answer.css('div.vote span[itemprop=upvoteCount]::text').extract()))
             item['accept'] = bool(answer.css('div.vote span.vote-accepted-on'))
             item['comments'] = answer.css(
                 'tr.comment span.comment-copy::text').extract()
-            user_url = answer.css(
-                'div.user-info div.user-gravatar32 a::attr(href)').extract().pop()
-            matched = re.match(r'/users/(?P<user_id>\d+)/[\w.-]+', user_url)
-            item['user_id'] = int(matched.group('user_id'))
+            user_url = ''.join(
+                answer.css('div.user-info div.user-gravatar32 a::attr(href)').extract())
+            matched = re.match(r'/users/(?P<user_id>\d+)/', user_url)
+            item['user_id'] = matched and int(matched.group('user_id'))
             item['question_id'] = int(id)
             yield item
