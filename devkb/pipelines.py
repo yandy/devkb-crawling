@@ -8,6 +8,7 @@ from devkb.models import Session
 from devkb.items.stackoverflow import UserItem, TagItem, QuestionItem, AnswerItem
 from devkb.models.stackoverflow import User, Tag, Question, Answer
 
+
 class DevkbPipeline(object):
 
     def process_item(self, item, spider):
