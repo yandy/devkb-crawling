@@ -1,7 +1,7 @@
 from __future__ import print_function
 from scrapy.command import ScrapyCommand
 
-from devkb.models import DeclarativeBase, ENGINE
+from devkb.models import DeclarativeBase, ENGINE, stackoverflow
 
 
 class DBSetup(ScrapyCommand):
