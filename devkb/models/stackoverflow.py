@@ -45,7 +45,7 @@ class Question(DeclarativeBase):
     vote = Column(Integer)
     comments = Column(PickleType)  # String List
     user_id = Column(Integer, ForeignKey('stackoverflow_users.id'))
-    answers = relationship('Answer', backref='user')
+    answers = relationship('Answer', backref='question')
 
 
 class Answer(DeclarativeBase):
