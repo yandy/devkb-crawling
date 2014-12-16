@@ -16,7 +16,14 @@ NEWSPIDER_MODULE = 'devkb.spiders'
 ITEM_PIPELINES = { 'devkb.pipelines.DevkbPipeline': 1 }
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'devkb (+http://www.yourdomain.com)'
+USER_AGENT = 'Tinysoubot (+http://tinysou.com)'
+#USER_AGENT = 'Tinysoubot (+http://tinysou.com)'
+
+# COOKIES_ENABLED = False
+
+# DOWNLOAD_DELAY = 0.5
+
+LOG_LEVEL = 'WARNING'
 
 COMMANDS_MODULE = 'devkb.commands'
 
