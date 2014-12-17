@@ -2,7 +2,6 @@
 
 import scrapy
 import re
-import random
 
 from devkb.items.stackoverflow import UserItem, TagItem, QuestionItem, AnswerItem
 from devkb.settings import URL_REGEXS, DENY_RULES, PROXY_ADDRESSES
@@ -26,10 +25,10 @@ class StackoverflowSpider(scrapy.Spider):
 
     def parse(self, response):
         if not response.xpath('/html/head/link[@rel="search" and contains(@title,"Stack")]'):
-            yield self._request(url=response.url, callback=self.parse, dont_filter=True)
+            yield scrapy.Request(url=response.url, callback=self.parse, dont_filter=True)
             return
         for link in self.link_extractor.extract_links(response):
-            yield self._request(url=link.url, callback=self.parse)
+            yield scrapy.Request(url=link.url, callback=self.parse)
 
         matched = URL_REGEX.search(response.url)
         if matched is None:
@@ -102,11 +101,3 @@ class StackoverflowSpider(scrapy.Spider):
             item['user_id'] = matched and int(matched.group('user_id'))
             item['question_id'] = int(id)
             yield item
-
-    def _request(self, *args, **kwargs):
-        req = scrapy.Request(*args, **kwargs)
-        if self.proxy_pool:
-            proxy_addr = self.proxy_pool[
-                random.randint(0, len(self.proxy_pool) - 1)]
-            req.meta['proxy'] = proxy_addr
-        return req

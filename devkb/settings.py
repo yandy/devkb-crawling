@@ -8,7 +8,8 @@
 #     http://doc.scrapy.org/en/latest/topics/settings.html
 #
 
-from devkb.environments import *
+import os
+import os.path
 
 BOT_NAME = 'devkb'
 
@@ -20,6 +21,12 @@ ITEM_PIPELINES = { 'devkb.pipelines.DevkbPipeline': 1 }
 LOG_LEVEL = 'DEBUG'
 
 COMMANDS_MODULE = 'devkb.commands'
+
+DOWNLOADER_MIDDLEWARES = {
+    'scrapy.contrib.downloadermiddleware.retry.RetryMiddleware': 90,
+    'devkb.randomproxy.RandomProxy': 100,
+    'scrapy.contrib.downloadermiddleware.httpproxy.HttpProxyMiddleware': 110
+}
 
 URL_REGEXS = {
     'stackoverflow': {
@@ -49,3 +56,18 @@ DENY_RULES = {
         r'^http://stackoverflow\.com/questions/.*/answer/submit'
         )
 }
+
+# Crawl responsibly by identifying yourself (and your website) on the user-agent
+#USER_AGENT = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:16.0) Gecko/20100101 Firefox/16.0'
+
+COOKIES_ENABLED = False
+
+# DOWNLOAD_DELAY = 0.25
+# ROBOTSTXT_OBEY = True
+RETRY_TIMES = 5
+
+CONF_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'conf')
+
+DATABASE = os.environ.get('DEVKB_DB') or os.path.join(CONF_PATH, 'db.yml')
+
+PROXY_LIST = os.environ.get('DEVKB_PROXY') or os.path.join(CONF_PATH, 'proxies.txt')
