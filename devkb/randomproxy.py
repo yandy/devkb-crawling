@@ -32,6 +32,9 @@ class RandomProxy(object):
         for line in fin.readlines():
             parts = re.match('(\w+://)(\w+:\w+@)?(.+)', line)
 
+            if parts is None:
+                continue
+
             # Cut trailing @
             if parts.group(2):
                 user_pass = parts.group(2)[:-1]
