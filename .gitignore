@@ -1,3 +1,7 @@
 *.pyc
+/scrapy.cfg
 /devkb.sqlite3
 /devkb/environments.py
+/build/
+/project.egg-info/
+/setup.py
