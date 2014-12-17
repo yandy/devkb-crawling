@@ -66,8 +66,8 @@ COOKIES_ENABLED = False
 # ROBOTSTXT_OBEY = True
 RETRY_TIMES = 5
 
-CONF_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'conf')
+CONF_PATH = os.environ.get('DEVKB_CONF') or '/etc/scrapy/projects/devkb'
 
-DATABASE = os.environ.get('DEVKB_DB') or os.path.join(CONF_PATH, 'db.yml')
+DATABASE = os.path.join(CONF_PATH, 'db.yml')
 
-PROXY_LIST = os.environ.get('DEVKB_PROXY') or os.path.join(CONF_PATH, 'proxies.txt')
+PROXY_LIST = os.path.join(CONF_PATH, 'proxies.txt')
