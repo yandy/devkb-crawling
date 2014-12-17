@@ -4,7 +4,7 @@ import scrapy
 import re
 
 from devkb.items.stackoverflow import UserItem, TagItem, QuestionItem, AnswerItem
-from devkb.settings import URL_REGEXS, DENY_RULES, PROXY_ADDRESSES
+from devkb.settings import URL_REGEXS, DENY_RULES
 from devkb.utils import parse_int
 from scrapy.contrib.linkextractors import LinkExtractor
 
@@ -18,10 +18,6 @@ class StackoverflowSpider(scrapy.Spider):
     start_urls = ('http://stackoverflow.com',)
     link_extractor = LinkExtractor(
         allow_domains=("stackoverflow.com",), allow=ALLOW_REGEX, deny=DENY_REGEX)
-
-    def __init__(self, *args, **kwargs):
-        super(StackoverflowSpider, self).__init__(*args, **kwargs)
-        self.proxy_pool = PROXY_ADDRESSES
 
     def parse(self, response):
         if not response.xpath('/html/head/link[@rel="search" and contains(@title,"Stack")]'):
