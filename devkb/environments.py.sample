@@ -1,0 +1,24 @@
+# -*- coding: utf-8 -*-
+
+DATABASE = {
+    'drivername': 'mysql+pymysql',
+    'username': '',
+    'password': '',
+    'host': '0.0.0.0',
+    'port': 3306,
+    'database': 'devkb',
+    'query': {
+        'charset': 'utf8',
+        'use_unicode': 0
+    }
+}
+
+# Crawl responsibly by identifying yourself (and your website) on the user-agent
+USER_AGENT = 'Tinysoubot (+http://tinysou.com)'
+#USER_AGENT = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:16.0) Gecko/20100101 Firefox/16.0'
+
+# COOKIES_ENABLED = False
+
+DOWNLOAD_DELAY = 0.25
+# ROBOTSTXT_OBEY = True
+RETRY_TIMES = 5

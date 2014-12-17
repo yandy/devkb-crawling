@@ -4,30 +4,13 @@ import scrapy
 import re
 
 from devkb.items.stackoverflow import UserItem, TagItem, QuestionItem, AnswerItem
-from devkb.settings import URL_REGEXS
+from devkb.settings import URL_REGEXS, DENY_RULES
 from devkb.utils import parse_int
 from scrapy.contrib.linkextractors import LinkExtractor
 
 URL_REGEX = re.compile('|'.join(URL_REGEXS['stackoverflow'].values()))
 ALLOW_REGEX = re.compile(r'^http://stackoverflow\.com/(questions|users|tags)')
-DENY_REGEX = re.compile('|'.join((
-                        r'^http://stackoverflow\.com/questions/ask[/?]',
-                        r'^http://stackoverflow\.com/users/login[/?]',
-                        r'^http://stackoverflow\.com/users/logout[/?]',
-                        r'^http://stackoverflow\.com/users/filter[/?]',
-                        r'^http://stackoverflow\.com/users/authenticate[/?]',
-                        r'^http://stackoverflow\.com/users/flag-weight/',
-                        r'^http://stackoverflow\.com/users/flag-summary/',
-                        r'^http://stackoverflow\.com/users/flair[/?]',
-                        r'^http://stackoverflow\.com/users/activity/',
-                        r'^http://stackoverflow\.com/users/stats/',
-                        r'^http://stackoverflow\.com/users/.*\?tab=accounts',
-                        r'^http://stackoverflow\.com/.*/ivc/',
-                        r'^http://stackoverflow\.com/.*\?lastactivity',
-                        r'^http://stackoverflow\.com/questions/.*answertab=',
-                        r'^http://stackoverflow\.com/questions/tagged',
-                        r'^http://stackoverflow\.com/questions/.*/answer/submit'))
-                        )
+DENY_REGEX = re.compile('|'.join(DENY_RULES['stackoverflow']))
 
 
 class StackoverflowSpider(scrapy.Spider):

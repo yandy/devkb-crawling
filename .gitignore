@@ -1,3 +1,3 @@
 *.pyc
-/itjuzi
 /devkb.sqlite3
+/devkb/environments.py
