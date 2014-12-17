@@ -17,7 +17,7 @@ NEWSPIDER_MODULE = 'devkb.spiders'
 
 ITEM_PIPELINES = { 'devkb.pipelines.DevkbPipeline': 1 }
 
-LOG_LEVEL = 'INFO'
+LOG_LEVEL = 'DEBUG'
 
 COMMANDS_MODULE = 'devkb.commands'
 
