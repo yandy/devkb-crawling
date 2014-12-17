@@ -17,11 +17,11 @@ ITEM_PIPELINES = { 'devkb.pipelines.DevkbPipeline': 1 }
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 USER_AGENT = 'Tinysoubot (+http://tinysou.com)'
-#USER_AGENT = 'Tinysoubot (+http://tinysou.com)'
+#USER_AGENT = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:16.0) Gecko/20100101 Firefox/16.0'
 
 # COOKIES_ENABLED = False
 
-# DOWNLOAD_DELAY = 0.5
+# DOWNLOAD_DELAY = 0.25
 
 LOG_LEVEL = 'WARNING'
 
