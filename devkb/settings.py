@@ -21,7 +21,9 @@ USER_AGENT = 'Tinysoubot (+http://tinysou.com)'
 
 # COOKIES_ENABLED = False
 
-# DOWNLOAD_DELAY = 0.25
+DOWNLOAD_DELAY = 0.25
+ROBOTSTXT_OBEY = True
+RETRY_TIMES = 5
 
 LOG_LEVEL = 'WARNING'
 
