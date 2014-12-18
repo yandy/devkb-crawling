@@ -4,5 +4,5 @@
 /build/
 /project.egg-info/
 /setup.py
-/devkb/conf/*
-!/devkb/conf/*.sample
+/conf/*
+!/conf/*.sample
