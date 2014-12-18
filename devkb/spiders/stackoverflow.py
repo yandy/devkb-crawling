@@ -9,15 +9,16 @@ from devkb.utils import parse_int
 from scrapy.contrib.linkextractors import LinkExtractor
 
 URL_REGEX = re.compile('|'.join(URL_REGEXS['stackoverflow'].values()))
-ALLOW_REGEX = re.compile(r'^http://stackoverflow\.com/(questions|users|tags)')
-DENY_REGEX = re.compile('|'.join(DENY_RULES['stackoverflow']))
+
+QUESTIONS_URLS = ['http://stackoverflow.com/questions?page=%d&sort=active' %
+                  page for page in xrange(1, 170967)]
 
 
 class StackoverflowSpider(scrapy.Spider):
     name = "stackoverflow"
-    start_urls = ('http://stackoverflow.com',)
+    start_urls = QUESTIONS_URLS
     link_extractor = LinkExtractor(
-        allow_domains=("stackoverflow.com",), allow=ALLOW_REGEX, deny=DENY_REGEX)
+        allow_domains=("stackoverflow.com",), allow=URL_REGEX)
 
     def parse(self, response):
         if not response.xpath('/html/head/link[@rel="search" and contains(@title,"Stack")]'):
@@ -69,6 +70,9 @@ class StackoverflowSpider(scrapy.Spider):
         item['body'] = body.strip()
         item['tags'] = response.css(
             'div#question td.postcell div.post-taglist a[rel=tag]::text').extract()
+        for tag in item['tags']:
+            tag_url = 'http://stackoverflow.com/tags/%s/info' % tag
+            yield scrapy.Request(url=tag_url, callback=self.parse)
         item['vote'] = parse_int(''.join(response.css(
             'div#question div.vote span[itemprop=upvoteCount]::text').extract()))
         item['comments'] = response.css(

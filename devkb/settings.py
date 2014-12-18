@@ -36,27 +36,6 @@ URL_REGEXS = {
     }
 }
 
-DENY_RULES = {
-    'stackoverflow': (
-        r'^http://stackoverflow\.com/questions/ask[/?]',
-        r'^http://stackoverflow\.com/users/login[/?]',
-        r'^http://stackoverflow\.com/users/logout[/?]',
-        r'^http://stackoverflow\.com/users/filter[/?]',
-        r'^http://stackoverflow\.com/users/authenticate[/?]',
-        r'^http://stackoverflow\.com/users/flag-weight/',
-        r'^http://stackoverflow\.com/users/flag-summary/',
-        r'^http://stackoverflow\.com/users/flair[/?]',
-        r'^http://stackoverflow\.com/users/activity/',
-        r'^http://stackoverflow\.com/users/stats/',
-        r'^http://stackoverflow\.com/users/.*\?tab=accounts',
-        r'^http://stackoverflow\.com/.*/ivc/',
-        r'^http://stackoverflow\.com/.*\?lastactivity',
-        r'^http://stackoverflow\.com/questions/.*answertab=',
-        r'^http://stackoverflow\.com/questions/tagged',
-        r'^http://stackoverflow\.com/questions/.*/answer/submit'
-        )
-}
-
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:16.0) Gecko/20100101 Firefox/16.0'
 
