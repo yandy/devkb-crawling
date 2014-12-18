@@ -10,22 +10,22 @@ from scrapy.contrib.linkextractors import LinkExtractor
 
 URL_REGEX = re.compile('|'.join(URL_REGEXS['stackoverflow'].values()))
 
-QUESTIONS_URLS = ['http://stackoverflow.com/questions?page=%d&sort=active' %
-                  page for page in xrange(1, 170967)]
+QUESTIONS_URL = 'http://stackoverflow.com/questions?page=%d&sort=active'
 
 
 class StackoverflowSpider(scrapy.Spider):
     name = "stackoverflow"
-    start_urls = QUESTIONS_URLS
     link_extractor = LinkExtractor(
         allow_domains=("stackoverflow.com",), allow=URL_REGEX)
+
+    def __init__(self, page_start=1, page_end=500, *args, **kwargs):
+        super(StackoverflowSpider, self).__init__(*args, **kwargs)
+        self.start_urls = [QUESTIONS_URL % page for page in range(int(page_start), int(page_end))]
 
     def parse(self, response):
         if not response.xpath('/html/head/link[@rel="search" and contains(@title,"Stack")]'):
             yield scrapy.Request(url=response.url, callback=self.parse, dont_filter=True)
             return
-        for link in self.link_extractor.extract_links(response):
-            yield scrapy.Request(url=link.url, callback=self.parse)
 
         matched = URL_REGEX.search(response.url)
         if matched is None:
@@ -37,6 +37,9 @@ class StackoverflowSpider(scrapy.Spider):
         elif matched.group('question_id'):
             for item in self._parse_question(response, id=matched.group('question_id')):
                 yield item
+
+        for link in self.link_extractor.extract_links(response):
+            yield scrapy.Request(url=link.url, callback=self.parse)
 
     def _parse_user(self, response, id):
         item = UserItem()
