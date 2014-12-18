@@ -29,7 +29,7 @@ class StackoverflowSpider(scrapy.Spider):
 
         matched = URL_REGEX.search(response.url)
         if matched is None:
-            return
+            pass
         elif matched.group('user_id'):
             yield self._parse_user(response, id=matched.group('user_id'))
         elif matched.group('tag_name'):
