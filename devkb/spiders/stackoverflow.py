@@ -29,7 +29,8 @@ class StackoverflowSpider(scrapy.Spider):
 
         matched = URL_REGEX.search(response.url)
         if matched is None:
-            pass
+            for link in self.link_extractor.extract_links(response):
+                yield scrapy.Request(url=link.url, callback=self.parse)
         elif matched.group('user_id'):
             yield self._parse_user(response, id=matched.group('user_id'))
         elif matched.group('tag_name'):
@@ -37,9 +38,6 @@ class StackoverflowSpider(scrapy.Spider):
         elif matched.group('question_id'):
             for item in self._parse_question(response, id=matched.group('question_id')):
                 yield item
-
-        for link in self.link_extractor.extract_links(response):
-            yield scrapy.Request(url=link.url, callback=self.parse)
 
     def _parse_user(self, response, id):
         item = UserItem()
