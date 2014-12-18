@@ -68,5 +68,5 @@ class RandomProxy(object):
                     proxy, len(self.proxies)))
         try:
             del self.proxies[proxy]
-        except ValueError:
+        except KeyError:
             pass
