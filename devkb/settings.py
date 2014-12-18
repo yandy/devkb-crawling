@@ -40,10 +40,10 @@ URL_REGEXS = {
 #USER_AGENT = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:16.0) Gecko/20100101 Firefox/16.0'
 
 COOKIES_ENABLED = False
-
 # DOWNLOAD_DELAY = 0.25
 # ROBOTSTXT_OBEY = True
 RETRY_TIMES = 10
+CONCURRENT_REQUESTS_PER_DOMAIN = 128
 
 CONF_PATH = os.environ.get('DEVKB_CONF') or '/etc/scrapy/projects/devkb'
 
