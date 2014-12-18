@@ -4,7 +4,7 @@ import scrapy
 import re
 
 from devkb.items.stackoverflow import UserItem, TagItem, QuestionItem, AnswerItem
-from devkb.settings import URL_REGEXS, DENY_RULES
+from devkb.settings import URL_REGEXS
 from devkb.utils import parse_int
 from scrapy.contrib.linkextractors import LinkExtractor
 
