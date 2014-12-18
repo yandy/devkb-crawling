@@ -6,6 +6,8 @@ from devkb.models import DeclarativeBase, ENGINE, stackoverflow
 
 class DBSetup(ScrapyCommand):
 
+    requires_project = True
+
     def syntax(self):
         return "[-v]"
 
