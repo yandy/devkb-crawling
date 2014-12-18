@@ -23,9 +23,9 @@ LOG_LEVEL = 'INFO'
 COMMANDS_MODULE = 'devkb.commands'
 
 DOWNLOADER_MIDDLEWARES = {
-    'scrapy.contrib.downloadermiddleware.retry.RetryMiddleware': 90,
-    'devkb.randomproxy.RandomProxy': 100,
-    'scrapy.contrib.downloadermiddleware.httpproxy.HttpProxyMiddleware': 110
+    # 'scrapy.contrib.downloadermiddleware.retry.RetryMiddleware': 90,
+    # 'devkb.randomproxy.RandomProxy': 100,
+    # 'scrapy.contrib.downloadermiddleware.httpproxy.HttpProxyMiddleware': 110
 }
 
 URL_REGEXS = {
@@ -40,10 +40,10 @@ URL_REGEXS = {
 #USER_AGENT = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:16.0) Gecko/20100101 Firefox/16.0'
 
 COOKIES_ENABLED = False
-# DOWNLOAD_DELAY = 0.25
+DOWNLOAD_DELAY = 0.25
 # ROBOTSTXT_OBEY = True
-RETRY_TIMES = 10
-CONCURRENT_REQUESTS_PER_DOMAIN = 128
+RETRY_TIMES = 5
+# CONCURRENT_REQUESTS_PER_DOMAIN = 128
 
 CONF_PATH = os.environ.get('DEVKB_CONF') or '/etc/scrapy/projects/devkb'
 
