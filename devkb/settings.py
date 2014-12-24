@@ -33,6 +33,9 @@ URL_REGEXS = {
         'user': r'^http://stackoverflow\.com/users/(?P<user_id>\d+)/[^/?]+/?$',
         'tag': r'^http://stackoverflow\.com/tags/(?P<tag_name>[\w.-]+)/info/?$',
         'question': r'^http://stackoverflow\.com/questions/(?P<question_id>\d+)/[^/?]+/?$'
+    },
+    'github': {
+        'repo': r'^https://github\.com/(?P<username>[\w.-]+)/(?P<reponame>[\w.-]+)'
     }
 }
 

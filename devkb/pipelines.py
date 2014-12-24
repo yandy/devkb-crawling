@@ -4,31 +4,22 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
-from devkb.models import Session
-from devkb.items.stackoverflow import UserItem, TagItem, QuestionItem, AnswerItem
-from devkb.models.stackoverflow import User, Tag, Question, Answer
+from devkb.models import db
+from devkb.items.stackoverflow import UserItem, TagItem, QuestionItem
 
 
 class DevkbPipeline(object):
 
     def process_item(self, item, spider):
-        session = Session()
         if isinstance(item, UserItem):
-            model = User(**item)
+            db.stackoverflow_users.update(
+                {"extid": item['extid']}, {"$set": dict(item)}, upsert=True)
         elif isinstance(item, TagItem):
-            model = Tag(**item)
+            db.stackoverflow_tags.update(
+                {"name": item["name"]}, {"$set": dict(item)}, upsert=True)
         elif isinstance(item, QuestionItem):
-            user = User(id=item['user_id'])
-            session.merge(user)
-            model = Question(**item)
-        elif isinstance(item, AnswerItem):
-            user = User(id=item['user_id'])
-            session.merge(user)
-            question = Question(id=item['question_id'])
-            session.merge(question)
-            model = Answer(**item)
+            db.stackoverflow_questions.update(
+                {"extid": item["extid"]}, {"$set": dict(item)}, upsert=True)
         else:
             return item
-        session.merge(model)
-        session.commit()
         return item

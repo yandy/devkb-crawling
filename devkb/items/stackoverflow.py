@@ -10,7 +10,7 @@ import scrapy
 
 class UserItem(scrapy.Item):
     # define the fields for your item here like:
-    id = scrapy.Field()
+    extid = scrapy.Field()
     url = scrapy.Field()
     name = scrapy.Field()
     reputation = scrapy.Field()
@@ -26,23 +26,12 @@ class TagItem(scrapy.Item):
 
 class QuestionItem(scrapy.Item):
     # define the fields for your item here like:
-    id = scrapy.Field()
+    extid = scrapy.Field()
     url = scrapy.Field()
     title = scrapy.Field()
     body = scrapy.Field()
     tags = scrapy.Field()
     vote = scrapy.Field()
     comments = scrapy.Field()
+    answers = scrapy.Field()
     user_id = scrapy.Field()
-
-
-class AnswerItem(scrapy.Item):
-    # define the fields for your item here like:
-    id = scrapy.Field()
-    url = scrapy.Field()
-    body = scrapy.Field()
-    vote = scrapy.Field()
-    accept = scrapy.Field()
-    comments = scrapy.Field()
-    user_id = scrapy.Field()
-    question_id = scrapy.Field()

@@ -2,13 +2,11 @@
 
 import yaml
 from devkb import settings
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.engine.url import URL
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine
+
+from pymongo import MongoClient
 
 _db_conf = yaml.load(open(settings.DATABASE, 'r').read())
 
-DeclarativeBase = declarative_base()
-ENGINE = create_engine(URL(**_db_conf))
-Session = sessionmaker(bind=ENGINE)
+client = MongoClient(_db_conf['host'], _db_conf['port'])
+
+db = client[_db_conf['database']]

@@ -1,7 +1,7 @@
 from __future__ import print_function
 from scrapy.command import ScrapyCommand
 
-from devkb.models import DeclarativeBase, ENGINE, stackoverflow
+from devkb.models import db
 
 
 class DBSetup(ScrapyCommand):
@@ -20,6 +20,6 @@ class DBSetup(ScrapyCommand):
                           help="show setup processing")
 
     def run(self, args, opts):
-        rest = DeclarativeBase.metadata.create_all(ENGINE)
-        if opts.verbose:
-            print(rest)
+        db.stackoverflow_users.ensure_index("extid", unique=True)
+        db.stackoverflow_tags.ensure_index("name", unique=True)
+        db.stackoverflow_questions.ensure_index("extid", unique=True)

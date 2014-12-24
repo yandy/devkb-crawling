@@ -3,7 +3,7 @@
 import scrapy
 import re
 
-from devkb.items.stackoverflow import UserItem, TagItem, QuestionItem, AnswerItem
+from devkb.items.stackoverflow import UserItem, TagItem, QuestionItem
 from devkb.settings import URL_REGEXS
 from devkb.utils import parse_int
 from scrapy.contrib.linkextractors import LinkExtractor
@@ -41,7 +41,7 @@ class StackoverflowSpider(scrapy.Spider):
 
     def _parse_user(self, response, id):
         item = UserItem()
-        item['id'] = int(id)
+        item['extid'] = int(id)
         item['url'] = response.url
         item['name'] = ''.join(
             response.css('h1#user-displayname a::text').extract())
@@ -62,7 +62,7 @@ class StackoverflowSpider(scrapy.Spider):
 
     def _parse_question(self, response, id):
         item = QuestionItem()
-        item['id'] = int(id)
+        item['extid'] = int(id)
         item['url'] = response.url
         item['title'] = ''.join(
             response.css('div#question-header h1[itemprop=name] a::text').extract())
@@ -82,23 +82,23 @@ class StackoverflowSpider(scrapy.Spider):
             'div#question div.user-info div.user-gravatar32 a::attr(href)').extract())
         matched = re.match(r'/users/(?P<user_id>\d+)/', user_url)
         item['user_id'] = matched and int(matched.group('user_id'))
-        yield item
+        item['answers'] = []
         for answer in response.css('div#answers div.answer'):
-            item = AnswerItem()
-            item['id'] = int(''.join(answer.xpath('@data-answerid').extract()))
-            item['url'] = response.url.rstrip(
-                '/') + '/%d#%d' % (item['id'], item['id'])
+            ans = {}
+            ans['extid'] = int(''.join(answer.xpath('@data-answerid').extract()))
+            ans['url'] = response.url.rstrip(
+                '/') + '/%d#%d' % (ans['extid'], ans['extid'])
             body = ''.join(
                 answer.css('div[itemprop=text]').xpath('node()').extract())
-            item['body'] = body.strip()
-            item['vote'] = parse_int(
+            ans['body'] = body.strip()
+            ans['vote'] = parse_int(
                 ''.join(answer.css('div.vote span[itemprop=upvoteCount]::text').extract()))
-            item['accept'] = bool(answer.css('div.vote span.vote-accepted-on'))
-            item['comments'] = answer.css(
+            ans['accept'] = bool(answer.css('div.vote span.vote-accepted-on'))
+            ans['comments'] = answer.css(
                 'tr.comment span.comment-copy::text').extract()
             user_url = ''.join(
                 answer.css('div.user-info div.user-gravatar32 a::attr(href)').extract())
             matched = re.match(r'/users/(?P<user_id>\d+)/', user_url)
-            item['user_id'] = matched and int(matched.group('user_id'))
-            item['question_id'] = int(id)
-            yield item
+            ans['user_id'] = matched and int(matched.group('user_id'))
+            item['answers'].append(ans)
+        yield item
