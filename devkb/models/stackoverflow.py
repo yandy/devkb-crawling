@@ -1,5 +1,3 @@
-from devkb.models import db
-
 """
 Schema:
 

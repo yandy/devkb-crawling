@@ -18,9 +18,11 @@ class StackoverflowSpider(scrapy.Spider):
     link_extractor = LinkExtractor(
         allow_domains=("stackoverflow.com",), allow=URL_REGEX)
 
-    def __init__(self, page_start=1, page_end=500, *args, **kwargs):
+    def __init__(self, skip=0, limit=2000, *args, **kwargs):
         super(StackoverflowSpider, self).__init__(*args, **kwargs)
-        self.start_urls = [QUESTIONS_URL % page for page in range(int(page_start), int(page_end))]
+        page_start = int(skip) + 1
+        page_end = page_start + int(limit)
+        self.start_urls = [QUESTIONS_URL % page for page in range(page_start, page_end)]
 
     def parse(self, response):
         if not response.xpath('/html/head/link[@rel="search" and contains(@title,"Stack")]'):

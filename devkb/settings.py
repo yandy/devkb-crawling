@@ -35,7 +35,10 @@ URL_REGEXS = {
         'question': r'^http://stackoverflow\.com/questions/(?P<question_id>\d+)/[^/?]+/?$'
     },
     'github': {
-        'repo': r'^https://github\.com/(?P<username>[\w.-]+)/(?P<reponame>[\w.-]+)'
+        'allow': r'^https://github\.com/[\w.-]+(/[\w.-]+)?$',
+        'deny': r'^https://github\.com/(login|signup|plan|search|[\w.-]+/[\w.-]+\.git)',
+        'user': r'^https://github\.com/(?P<username>[\w.-]+)$',
+        'repo': r'^https://github\.com/(?P<ownername>[\w.-]+)/(?P<reponame>[\w.-]+)$'
     }
 }
 

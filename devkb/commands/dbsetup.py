@@ -23,3 +23,7 @@ class DBSetup(ScrapyCommand):
         db.stackoverflow_users.ensure_index("extid", unique=True)
         db.stackoverflow_tags.ensure_index("name", unique=True)
         db.stackoverflow_questions.ensure_index("extid", unique=True)
+        db.github_users.ensure_index("extid", unique=True, sparse=True)
+        db.github_users.ensure_index("login", unique=True)
+        db.github_repos.ensure_index('extid', unique=True, sparse=True)
+        db.github_repos.ensure_index('fullname', unique=True)
