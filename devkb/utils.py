@@ -4,7 +4,7 @@
 
 import re
 
-digit_regex = re.compile(r'^(?P<comma>[\d,\s]+)$|^(?P<huma>[\d.\s]+[kKmM])$|^(?P<digit>[\d]+)$')
+digit_regex = re.compile(r'^(?P<comma>\-?[\d,\s]+)$|^(?P<huma>\-?[\d.\s]+[kKmM])$')
 huma_dict = {
     'k': 1000,
     'm': 1000000
@@ -16,7 +16,9 @@ def parse_int(num):
     elif isinstance(num, basestring):
         num = num.strip()
         matched = digit_regex.search(num)
-        if matched.group('comma'):
+        if matched is None:
+            return float('NaN')
+        elif matched.group('comma'):
             return int(''.join(num.split(',')))
         elif matched.group('huma'):
             base = num[0:-1]
