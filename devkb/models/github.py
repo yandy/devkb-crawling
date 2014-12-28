@@ -32,6 +32,7 @@ github_repos:
   stars_count: <int>,
   forks_count: <int>,
   commits_count: <int>,
-  contributors_count: <int>
+  contributors_count: <int>,
+  tags: [<str>]
 }
 """
