@@ -50,6 +50,7 @@ DOWNLOAD_DELAY = 0.25
 # ROBOTSTXT_OBEY = True
 RETRY_TIMES = 5
 # CONCURRENT_REQUESTS_PER_DOMAIN = 128
+DEPTH_LIMIT = 3
 
 CONF_PATH = os.environ.get('DEVKB_CONF') or '/etc/scrapy/projects/devkb'
 
