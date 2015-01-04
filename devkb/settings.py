@@ -31,7 +31,7 @@ DOWNLOADER_MIDDLEWARES = {
 URL_REGEXS = {
     'stackoverflow': {
         'user': r'^http://stackoverflow\.com/users/(?P<user_id>\d+)/[^/?]+/?$',
-        'tag': r'^http://stackoverflow\.com/tags/(?P<tag_name>[\w.-]+)/info/?$',
+        'tag': r'^http://stackoverflow\.com/tags/(?P<tag_name>[^/]+)/info/?$',
         'question': r'^http://stackoverflow\.com/questions/(?P<question_id>\d+)/[^/?]+/?$'
     },
     'github': {
@@ -50,7 +50,6 @@ DOWNLOAD_DELAY = 0.25
 # ROBOTSTXT_OBEY = True
 RETRY_TIMES = 5
 # CONCURRENT_REQUESTS_PER_DOMAIN = 128
-DEPTH_LIMIT = 3
 
 CONF_PATH = os.environ.get('DEVKB_CONF') or '/etc/scrapy/projects/devkb'
 
