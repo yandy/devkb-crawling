@@ -2,6 +2,7 @@
 
 import scrapy
 import re
+import urllib2
 
 from devkb.items.stackoverflow import UserItem, TagItem, QuestionItem
 from devkb.settings import URL_REGEXS
@@ -74,7 +75,7 @@ class StackoverflowSpider(scrapy.Spider):
         item['tags'] = response.css(
             'div#question td.postcell div.post-taglist a[rel=tag]::text').extract()
         for tag in item['tags']:
-            tag_url = 'http://stackoverflow.com/tags/%s/info' % tag
+            tag_url = 'http://stackoverflow.com/tags/%s/info' % urllib2.quote(tag.encode('utf8'))
             yield scrapy.Request(url=tag_url, callback=self.parse)
         item['vote'] = parse_int(''.join(response.css(
             'div#question div.vote span[itemprop=upvoteCount]::text').extract()))
