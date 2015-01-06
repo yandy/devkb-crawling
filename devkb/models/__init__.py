@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import yaml
-from devkb import settings
-
 from pymongo import MongoClient
+
+from devkb import settings
 
 _db_conf = yaml.load(open(settings.DATABASE, 'r').read())
 
