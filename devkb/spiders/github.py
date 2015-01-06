@@ -15,7 +15,7 @@ class GithubSpider(scrapy.Spider):
     link_extractor = LinkExtractor(allow_domains=("github.com",), allow=re.compile(
         URL_REGEXS['github']['allow']), deny=re.compile(URL_REGEXS['github']['deny']))
 
-    def __init__(self, skip=0, limit=200, *args, **kwargs):
+    def __init__(self, skip=0, limit=1000, *args, **kwargs):
         super(GithubSpider, self).__init__(*args, **kwargs)
         self.start_urls = [
             repo['url'] for repo in db.github_repos.find(skip=int(skip), limit=int(limit))]

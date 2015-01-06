@@ -51,7 +51,7 @@ DOWNLOAD_DELAY = 0.25
 RETRY_TIMES = 5
 # CONCURRENT_REQUESTS_PER_DOMAIN = 128
 
-CONF_PATH = os.environ.get('DEVKB_CONF') or '/etc/scrapy/projects/devkb'
+CONF_PATH = os.environ.get('DEVKB_CONF', '/etc/devkb')
 
 DATABASE = os.path.join(CONF_PATH, 'db.yml')
 
