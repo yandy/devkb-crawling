@@ -19,7 +19,7 @@ class StackoverflowSpider(scrapy.Spider):
     link_extractor = LinkExtractor(
         allow_domains=("stackoverflow.com",), allow=URL_REGEX)
 
-    def __init__(self, skip=0, limit=1000, sort='frequent', *args, **kwargs):
+    def __init__(self, skip=0, limit=1000, sort='active', *args, **kwargs):
         super(StackoverflowSpider, self).__init__(*args, **kwargs)
         page_start = int(skip) + 1
         page_end = page_start + int(limit)
