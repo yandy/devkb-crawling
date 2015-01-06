@@ -23,7 +23,7 @@ class GithubSpider(scrapy.Spider):
             '|'.join((URL_REGEXS['github']['user'], URL_REGEXS['github']['repo'])))
 
     def parse(self, response):
-        if not response.xpath('/html/head/link[@rel="search" and contains(@title,"Stack")]'):
+        if not response.xpath('/html/head/link[@rel="search" and contains(@title,"GitHub")]'):
             yield scrapy.Request(url=response.url, callback=self.parse, dont_filter=True)
             return
 
@@ -34,8 +34,8 @@ class GithubSpider(scrapy.Spider):
             yield self._parse_user(response, matched.group('username'))
         elif matched.group('reponame'):
             yield self._parse_repo(response, matched.group('ownername'), matched.group('reponame'))
-        for link in self.link_extractor.extract_links(response):
-            yield scrapy.Request(url=link.url, callback=self.parse)
+            owner_url = 'https://github.com/%s' % matched.group('ownername')
+            yield scrapy.Request(url=owner_url, callback=self.parse)
 
     def _parse_user(self, response, username):
         item = UserItem()
@@ -62,9 +62,11 @@ class GithubSpider(scrapy.Spider):
         item['homepage'] = ''.join(response.css('.repository-meta .repository-website a::attr(href)').extract())
         item['descr'] = ''.join(response.css('.repository-meta .repository-description::text').extract())
         counts = response.css('ul.pagehead-actions li a.social-count::text').extract()
-        item['stars_count'] = parse_int(counts[0])
-        item['forks_count'] = parse_int(counts[1])
+        if len(counts) == 2:
+            item['stars_count'] = parse_int(counts[0])
+            item['forks_count'] = parse_int(counts[1])
         stats = response.css('ul.numbers-summary li span.num::text').extract()
-        item['commits_count'] = parse_int(stats[0])
-        item['contributors_count'] = parse_int(stats[3])
+        if len(stats) == 4:
+            item['commits_count'] = parse_int(stats[0])
+            item['contributors_count'] = parse_int(stats[3])
         return item
