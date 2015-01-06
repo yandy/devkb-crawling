@@ -1,6 +1,7 @@
 *.pyc
+*.log
+*.sqlite3
 /scrapy.cfg
-/devkb.sqlite3
 /build/
 /project.egg-info/
 /setup.py
