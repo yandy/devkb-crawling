@@ -15,7 +15,7 @@ class GithubSpider(scrapy.Spider):
     link_extractor = LinkExtractor(allow_domains=("github.com",), allow=re.compile(
         URL_REGEXS['github']['allow']), deny=re.compile(URL_REGEXS['github']['deny']))
 
-    def __init__(self, skip=0, limit=1000, *args, **kwargs):
+    def __init__(self, skip=0, limit=1000, proxy=False, *args, **kwargs):
         super(GithubSpider, self).__init__(*args, **kwargs)
         self.start_urls = [
             repo['url'] for repo in db.github_repos.find(skip=int(skip), limit=int(limit))]
@@ -23,7 +23,7 @@ class GithubSpider(scrapy.Spider):
             '|'.join((URL_REGEXS['github']['user'], URL_REGEXS['github']['repo'])))
 
     def parse(self, response):
-        if not response.xpath('/html/head/link[@rel="search" and contains(@title,"GitHub")]'):
+        if proxy and not response.xpath('/html/head/link[@rel="search" and contains(@title,"GitHub")]'):
             yield scrapy.Request(url=response.url, callback=self.parse, dont_filter=True)
             return
 

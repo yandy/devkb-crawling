@@ -19,14 +19,14 @@ class StackoverflowSpider(scrapy.Spider):
     link_extractor = LinkExtractor(
         allow_domains=("stackoverflow.com",), allow=URL_REGEX)
 
-    def __init__(self, skip=0, limit=1000, sort='active', *args, **kwargs):
+    def __init__(self, skip=0, limit=1000, sort='active', proxy=False, *args, **kwargs):
         super(StackoverflowSpider, self).__init__(*args, **kwargs)
         page_start = int(skip) + 1
         page_end = page_start + int(limit)
         self.start_urls = [QUESTIONS_URL % (page, sort) for page in range(page_start, page_end)]
 
     def parse(self, response):
-        if not response.xpath('/html/head/link[@rel="search" and contains(@title,"Stack")]'):
+        if proxy and not response.xpath('/html/head/link[@rel="search" and contains(@title,"Stack")]'):
             yield scrapy.Request(url=response.url, callback=self.parse, dont_filter=True)
             return
 
