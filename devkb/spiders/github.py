@@ -21,9 +21,10 @@ class GithubSpider(scrapy.Spider):
             repo['url'] for repo in db.github_repos.find(skip=int(skip), limit=int(limit))]
         self.item_regex = re.compile(
             '|'.join((URL_REGEXS['github']['user'], URL_REGEXS['github']['repo'])))
+        self.proxy = proxy
 
     def parse(self, response):
-        if proxy and not response.xpath('/html/head/link[@rel="search" and contains(@title,"GitHub")]'):
+        if self.proxy and not response.xpath('/html/head/link[@rel="search" and contains(@title,"GitHub")]'):
             yield scrapy.Request(url=response.url, callback=self.parse, dont_filter=True)
             return
 
