@@ -103,6 +103,8 @@ class StackoverflowSpider(scrapy.Spider):
             user_url = ''.join(
                 answer.css('div.user-info div.user-gravatar32 a::attr(href)').extract())
             matched = re.match(r'/users/(?P<user_id>\d+)/', user_url)
-            ans['user_id'] = matched and int(matched.group('user_id'))
+            if matched:
+                ans['user_id'] = int(matched.group('user_id'))
+                yield scrapy.Request(url=user_url, callback=self.parse)
             item['answers'].append(ans)
         yield item
