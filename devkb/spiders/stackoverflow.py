@@ -3,11 +3,13 @@
 import scrapy
 import re
 import urllib2
+from six.moves.urllib.parse import urljoin
 
 from devkb.items.stackoverflow import UserItem, TagItem, QuestionItem
 from devkb.settings import URL_REGEXS
 from devkb.utils import parse_int
 from scrapy.contrib.linkextractors import LinkExtractor
+
 
 URL_REGEX = re.compile('|'.join(URL_REGEXS['stackoverflow'].values()))
 
@@ -82,9 +84,9 @@ class StackoverflowSpider(scrapy.Spider):
             'div#question div.vote span[itemprop=upvoteCount]::text').extract()))
         item['comments'] = response.css(
             'div#question tr.comment span.comment-copy::text').extract()
-        user_url = ''.join(response.css(
+        user_path = ''.join(response.css(
             'div#question div.user-info div.user-gravatar32 a::attr(href)').extract())
-        matched = re.match(r'/users/(?P<user_id>\d+)/', user_url)
+        matched = re.match(r'/users/(?P<user_id>\d+)/', user_path)
         item['user_id'] = matched and int(matched.group('user_id'))
         item['answers'] = []
         for answer in response.css('div#answers div.answer'):
@@ -100,11 +102,12 @@ class StackoverflowSpider(scrapy.Spider):
             ans['accept'] = bool(answer.css('div.vote span.vote-accepted-on'))
             ans['comments'] = answer.css(
                 'tr.comment span.comment-copy::text').extract()
-            user_url = ''.join(
+            user_path = ''.join(
                 answer.css('div.user-info div.user-gravatar32 a::attr(href)').extract())
-            matched = re.match(r'/users/(?P<user_id>\d+)/', user_url)
+            matched = re.match(r'/users/(?P<user_id>\d+)/', user_path)
             if matched:
                 ans['user_id'] = int(matched.group('user_id'))
+                user_url = urljoin('http://stackoverflow.com', user_path)
                 yield scrapy.Request(url=user_url, callback=self.parse)
             item['answers'].append(ans)
         yield item
