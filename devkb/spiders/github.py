@@ -9,19 +9,31 @@ from devkb.utils import parse_int
 from devkb.models import db
 from scrapy.contrib.linkextractors import LinkExtractor
 
+URLS_FILE = '/var/lib/scrapyd/github_repos.txt'
 
 class GithubSpider(scrapy.Spider):
     name = "github"
     link_extractor = LinkExtractor(allow_domains=("github.com",), allow=re.compile(
         URL_REGEXS['github']['allow']), deny=re.compile(URL_REGEXS['github']['deny']))
 
-    def __init__(self, skip=0, limit=1000, proxy=False, *args, **kwargs):
+    def __init__(self, skip=0, limit=1000, proxy=False, furls=URLS_FILE, *args, **kwargs):
         super(GithubSpider, self).__init__(*args, **kwargs)
-        self.start_urls = [
-            repo['url'] for repo in db.github_repos.find(skip=int(skip), limit=int(limit))]
+        self.start_urls = self.genstarturls(furls, int(skip), int(limit))
         self.item_regex = re.compile(
             '|'.join((URL_REGEXS['github']['user'], URL_REGEXS['github']['repo'])))
         self.proxy = proxy
+
+    def genstarturls(self, furls, skip, limit):
+        end = skip + limit
+        times = 0
+        with open(furls) as f:
+            for l in f:
+                if times < skip:
+                    continue
+                if times >= end:
+                    break
+                yield l.strip()
+                times += 1
 
     def parse(self, response):
         if self.proxy and not response.xpath('/html/head/link[@rel="search" and contains(@title,"GitHub")]'):
