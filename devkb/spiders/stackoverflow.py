@@ -25,8 +25,14 @@ class StackoverflowSpider(scrapy.Spider):
         super(StackoverflowSpider, self).__init__(*args, **kwargs)
         page_start = int(skip) + 1
         page_end = page_start + int(limit)
-        self.start_urls = [QUESTIONS_URL % (page, sort) for page in range(page_start, page_end)]
+        self.start_urls = self.genstarturls(page_start, page_end, sort)
         self.proxy = proxy
+
+    def genstarturls(self, start, end, sort):
+        page = start
+        while page < end:
+            yield QUESTIONS_URL % (page, sort)
+            page += 1
 
     def parse(self, response):
         if self.proxy and not response.xpath('/html/head/link[@rel="search" and contains(@title,"Stack")]'):
