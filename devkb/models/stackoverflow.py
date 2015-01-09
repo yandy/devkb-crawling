@@ -17,7 +17,8 @@ stackoverflow_tags:
   url: <str>,
   name: <str>,
   qcount: <int>,
-  descr: <str>
+  descr: <str>,
+  github_repos: [<str>]
 }
 
 stackoverflow_questions:
@@ -40,6 +41,7 @@ stackoverflow_questions:
       comments: [<str>],
       user_id: <int>
     }
-  ]
+  ],
+  github_repos: [<str>]
 }
 """
