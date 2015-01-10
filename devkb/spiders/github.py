@@ -28,12 +28,12 @@ class GithubSpider(scrapy.Spider):
         times = 0
         with open(furls) as f:
             for l in f:
-                if times < skip:
+                times += 1
+                if times <= skip:
                     continue
-                if times >= end:
+                if times > end:
                     break
                 yield l.strip()
-                times += 1
 
     def parse(self, response):
         if self.proxy and not response.xpath('/html/head/link[@rel="search" and contains(@title,"GitHub")]'):
